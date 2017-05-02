@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+		<title>Florimètre</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
+		<link rel="stylesheet" type="text/css" href="node_modules/materialize-css/bin/materialize.css" >
+		<link rel="stylesheet" type="text/css" href="css/css.css">
+		<link rel="stylesheet" type="text/css" href="css/progress.css">
+		<link rel="stylesheet" type="text/css" href="css/values.css">
+		<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="node_modules/materialize-css/bin/materialize.js"></script>
+		<script type="text/javascript" src="node_modules/chart.js/dist/Chart.js"></script>
+		<script type="text/javascript" src="node_modules/angular/angular.js"></script>
+		<script type="text/javascript" src="node_modules/angular-route/angular-route.js"></script>
+		<script type="text/javascript" src="js/module.js"></script>
+		<script type="text/javascript" src="js/graphe.js"></script>
+		<script type="text/javascript" src="js/request.js"></script>
+		<script type="text/javascript" src="js/synchronize.js"></script>
+	</head>
+	<!-- call function insertGraph when body is loaded -->
+	<body ng-app='fluo' onload='insertGraph()'>
+		<div id='screen' >
+			<div id='values'>
+				<table id='progress' ng-controller='progressBarCtrl'>
+					<tr>
+						<td style='width: 20%'><p id="chA">Channel A : </p></td>
+						<td style='width: 75%'>
+							<div class="prog" id='progChannelA'>
+								<div class="indic" id='indicChannelA'></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td><p id="chC">Channel C : </p></td>
+						<td>
+							<div class="prog" id='progChannelC'>
+								<div class="indic" id='indicChannelC'></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td><p id="chAC" >Channel A/C : </p></td>
+						<td>
+							<div class="prog" id='progChannelAC'>
+								<div class="indic" id='indicChannelAC'></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p>Excitation : </p>
+						</td>
+						<td>
+							<input type='text' class='showValues' id='exci' disabled='disabled'>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p>Emission : </p>
+						</td>
+						<td>
+							<input type='text' class='showValues' id='emi' disabled='disabled' value="320">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id='graph' >
+				<canvas id="graphe" style="background-color: purple"></canvas>
+				<div id=buttons style="background-color: yellow" ng-controller='buttonsCtrl'>
+					<a class="waves-effect waves-light btn" ng-click='save()'><i class="material-icons right">save</i>save</a>		
+					<a class="waves-effect waves-light btn" onclick='clearGraph()'><i class="material-icons right">delete_forever</i>delete graphe</a>		
+				</div>
+			</div>
+		</div>
+	<!--
+
+0406342229-->
+
+	</body>
+</html>

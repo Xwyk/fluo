@@ -1,0 +1,29 @@
+#progChannelA{
+}
+
+#indicChannelA{
+
+}
+#ProgChannelC{
+
+}
+#indicChannelC{
+
+}
+#ProgChannelAC{
+  
+}
+#indicChannelAC{
+
+}
+.prog{
+  width: 75%;
+  height: 5vh;
+  background-color: gray;
+  border-style: inset;
+}
+
+.indic{
+  height: 100%;
+  background-color: yellow; 
+}
