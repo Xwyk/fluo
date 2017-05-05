@@ -1,45 +1,61 @@
+//save chart a global variable
 var myChart;
-//When document is ready
+/**
+ * get canvas from document and insert graph into
+ */
 function insertGraph(){
     var ctx = document.getElementById('graphe').getContext('2d');
     //creation of Chart
     myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['10', '20', '30', '40', '50', '60', '70'],
+            //labels: ['10', '20', '30', '40', '50', '60', '70'],
             datasets: [{
                 label: "Emission",
-                data: [10, 20, 30, 40, 50, 60, 70],
                 backgroundColor: "rgba(153,255,51,0.4)"
             },
             {
                 label: "Excitation",
-                data: [295],
                 backgroundColor: "rgba(153,255,236,0.4)"
-            }
-            ]
+            }]
         },
         options: {
             maintainAspectRatio: false,
-            
+            legend: {
+                labels: {
+                    fontSize: 20,
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        display:false,
+                        beginAtZero:true
+                    }
+                }]
+            },           
         }
     });
     //set size of graph, default size is override when creating the tab
     document.getElementById('graphe').style.width="100%";
     document.getElementById('graphe').style.height="90%";
-    // addPoint("25",70, 0);
-    // addPoint("25",260, 0);
-    addPoint("31",69, 0);
-    // addPoint("2000",69, 0);
-    addPoint("51",56, 0);
-    // addPoint("320",239, 0);
-    // addPoint("1120",98, 0);
-
-    // myChart.data.labels.push("test")
-    // myChart.data.datasets[0].data.push(70);
-    //angular.element(document.getElementById('progress')).scope().setProg("A",5);
 
 }
+
+function test(){
+    addPoint("25",70, 0);
+    addPoint("25",260, 0);
+    addPoint("31",69, 0);
+    addPoint("2000",69, 0);
+    addPoint("51",56, 0);
+    angular.element(document.getElementById('progress')).scope().setProg("A",5);
+    angular.element(document.getElementById('progress')).scope().setProg("C",50);
+    angular.element(document.getElementById('progress')).scope().setProg("A",70);
+    angular.element(document.getElementById('progress')).scope().setProg("C",54);
+    angular.element(document.getElementById('progress')).scope().setProg("A",52);
+
+}
+
 /**
  * return a string in .CSV syntax, which contains coordinates of each point on the graph
  * @return {string} formatted string 
@@ -60,16 +76,34 @@ function getDataCSV(){
         //for each set of data, add value in wright column
         myChart.data.datasets.forEach(function(element){
             //if value isn't define, we return a blank, for the syntax
-            ret += (element.data[i] === undefined)? "; ":";"+element.data[i];
+            ret += (element.data[i] === undefined)? "; ":";"+element.data[i].y;
         });
         //indentationtion
         ret+="\n";
     }
+
     return ret;
 }
 /**
- * add a point to an exsisting dataset, and does nothing if dataset doesn't exist
- * X array is sort in numeric order before insert value.
+ * return a string formatted to JCAMP-DX format
+ * @return {string} formatted string
+ */
+function getDataJDX(){
+    var d=new Date();
+    var ret = "##TITLE= spectrofluorescence\n"+
+              "##JCAMP-DX= 5.00\n"+
+              "##DATA TYPE= FLORESCENCE SPECTRUM\n"+
+              "##DATA CLASS= PEAK TABLE\n"+
+              "##DATE="+d.getDay()+"."+d.getMonth()+"."+(d.getFullYear()-2000)+"\n"+
+              "##TIME="+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"\n"+
+              "##ORIGIN= Université Bretagne Sud, salle F091\n"+
+              "##XUNITS=Nanometers\n"+
+              "##YUNITS=Relative Luminescence\n"+
+              "##XYDATA= (XY..XY)\n";
+
+}
+/**
+ * check if dataset exists, and add new point, or, if x coordinate already exists, update y value
  * @param {int} xAxis X coordinate
  * @param {int} yAxis Y coordinate
  * @param {int} data  index of dataset
@@ -77,40 +111,22 @@ function getDataCSV(){
 function addPoint(xAxis, yAxis, data){
     datasetToModify = myChart.data.datasets[data];
     //if selected dataset doesn't exsist, quit method
-    var exist = true;
+    var exist = false;
     if (datasetToModify === undefined)
         return;
-    if (myChart.data.labels.indexOf(xAxis) == -1) {
-        exist=false;
-        //we add value into labels array
+    datasetToModify.data.forEach(function(element){
+        if (element.x == xAxis){
+            exist = true;
+            element.y = yAxis;
+        }
+    });
+    if(!exist){
         myChart.data.labels.push(xAxis);
         //we sort array
         myChart.data.labels.sort(function(a, b) {
             return a-b;
         });
-    }
-    var length = datasetToModify.data.length + 1;
-    var index = myChart.data.labels.indexOf(xAxis);
-    //if char to modify exist, we just have to set the new value
-    if (exist) {
-        datasetToModify.data[index] = yAxis;
-    }
-    //else, we have to add new X in Xaxis array, and associate Yaxis value
-    else {
-        //create a new array
-        var newData = [length];
-        //put old Yaxis with minus Xaxis than new to set
-        for (var i = 0; i < index-1; i++) {
-            newData.push(datasetToModify.data[i]);
-        }
-        //put yAxis associate with the new Xaxis
-        newData.push(yAxis);
-        //put rest of yAxis 
-        for (var i = index+1; i <=  myChart.data.labels.length; i++) {
-            newData.push(datasetToModify.data[i]);
-        }
-        //and finally we overwrite data in selected dataset
-        myChart.data.datasets[0].data = newData;
+        datasetToModify.data.push({x: xAxis, y: yAxis});
     }
     //update
     updateChart();
@@ -120,14 +136,7 @@ function addPoint(xAxis, yAxis, data){
  * Clear all points on the graph
  */
 function clearGraph(){
-    //create a new array
-    var data=[];
-    //set each dataset's data to new array
-    for (var i = 0; i <= myChart.data.datasets.length; i++) {
-        myChart.data.datasets.data=data;
-    }
-    //set labels to new empty array
-    myChart.data.labels=data;
+    myChart.clear();
     //update
     updateChart();
 }
@@ -138,3 +147,25 @@ function updateChart(){
     myChart.update();
 
 }    
+
+
+// var data = {
+//     datasets: [
+//         {
+//             label: 'First Dataset',
+//             data: [
+//                 {
+//                     x: 20,
+//                     y: 30,
+//                     r: 15
+//                 },
+//                 {
+//                     x: 40,
+//                     y: 10,
+//                     r: 10
+//                 }
+//             ],
+//             backgroundColor:"#FF6384",
+//             hoverBackgroundColor: "#FF6384",
+//         }]
+// };

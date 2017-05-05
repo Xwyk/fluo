@@ -3,8 +3,9 @@
 	<head>
 	<meta charset="utf-8">
 		<title>Florimètre</title>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
+		<link rel="icon" href="icons/favicon.png">
 		<link rel="stylesheet" type="text/css" href="node_modules/materialize-css/bin/materialize.css" >
+		<link rel="stylesheet" type="text/css" href="css/materializeIcons.css" >
 		<link rel="stylesheet" type="text/css" href="css/css.css">
 		<link rel="stylesheet" type="text/css" href="css/progress.css">
 		<link rel="stylesheet" type="text/css" href="css/values.css">
@@ -12,7 +13,6 @@
 		<script type="text/javascript" src="node_modules/materialize-css/bin/materialize.js"></script>
 		<script type="text/javascript" src="node_modules/chart.js/dist/Chart.js"></script>
 		<script type="text/javascript" src="node_modules/angular/angular.js"></script>
-		<script type="text/javascript" src="node_modules/angular-route/angular-route.js"></script>
 		<script type="text/javascript" src="js/module.js"></script>
 		<script type="text/javascript" src="js/graphe.js"></script>
 		<script type="text/javascript" src="js/request.js"></script>
@@ -52,7 +52,7 @@
 							<p>Excitation : </p>
 						</td>
 						<td>
-							<input type='text' class='showValues' id='exci' disabled='disabled'>
+							<div class='showValues' id='exci'></div>
 						</td>
 					</tr>
 					<tr>
@@ -60,7 +60,7 @@
 							<p>Emission : </p>
 						</td>
 						<td>
-							<input type='text' class='showValues' id='emi' disabled='disabled' value="320">
+							<div class='showValues' id='emi'></div>
 						</td>
 					</tr>
 				</table>
@@ -68,8 +68,9 @@
 			<div id='graph' >
 				<canvas id="graphe" style="background-color: purple"></canvas>
 				<div id=buttons style="background-color: yellow" ng-controller='buttonsCtrl'>
-					<a class="waves-effect waves-light btn" ng-click='save()'><i class="material-icons right">save</i>save</a>		
+					<a class="waves-effect waves-light btn" ng-click='save(0)'><i class="material-icons right">save</i>save</a>		
 					<a class="waves-effect waves-light btn" onclick='clearGraph()'><i class="material-icons right">delete_forever</i>delete graphe</a>		
+					<a class="waves-effect waves-light btn" onclick='synchronize()'><i class="material-icons right">sync</i>Synchronize</a>		
 				</div>
 			</div>
 		</div>
