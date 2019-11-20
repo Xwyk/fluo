@@ -6,7 +6,7 @@
   "dependencies": {
     "jquery": "~3.2.1",
     "materialize-css": "~0.98.1",
-    "angular": "~1.6.4",
+    "angular": "~1.7.9",
     "chartjs": "2.5.0"
   },
   "devDependencies": {},
