@@ -4,7 +4,7 @@
   "description": "Web Application for SLM800C fluorimeter",
   "main": "index.html",
   "dependencies": {
-    "jquery": "~3.2.1",
+    "jquery": "~3.5.0",
     "materialize-css": "~0.98.1",
     "angular": "~1.6.4",
     "chartjs": "2.5.0"
